@@ -18,4 +18,5 @@ int main() {
 		}
 	}
 	cout << abs(maxO - minE);
+	return 0;
 }
