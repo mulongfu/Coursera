@@ -1,44 +1,50 @@
-﻿#include <iostream>
-
+#include <iostream>
+#include <algorithm>
 using namespace std;
 
-int main() {
-	int n = 0, after = 0;
-	cin >> n;
-	char room[101][101];
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-			cin >> room[i][j];
-	cin >> after;
-	for (int k = 0; k < after; k++) {
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (room[i][j] == '@' || room[i][j] == '!') {
-					if (j - 1 != -1 && room[i][j - 1] != '#')
-						room[i][j - 1] = '!';
-					if (j + 1 != n && room[i][j + 1] != '#')
-						room[i][j + 1] = '!';
-					if (i - 1 != -1 && room[i - 1][j] != '#')
-						room[i - 1][j] = '!';
-					if (i + 1 != n && room[i + 1][j] != '#')
-						room[i + 1][j] = '!';
-				}
+struct cell {
+	int id, before, after;
+	double rate;
+};
 
-			}
+bool comp(cell a, cell b) {
+	return a.rate < b.rate;
+}
+
+int main() {
+	int n = 0, typea = 0, typeb = 0;
+	cin >> n;
+	cell exp[101];
+	for (int i = 0; i < n; i++) {		
+		cin >> exp[i].id >> exp[i].before >> exp[i].after;			
+		exp[i].rate = (double)exp[i].after / (double)exp[i].before;
+	}
+	//Sort all rate min -> max
+	sort(exp, exp + n, comp);
+
+	/*
+	for (int i = 0; i < n; i++) {
+		cout << exp[i].rate << endl;
+	}
+	*/
+
+	double temp = 0;
+	int index = 0;
+
+	for (int i = 0; i < n-1; i++) {		
+		if (temp < (exp[i + 1].rate - exp[i].rate)) {
+			temp = exp[i + 1].rate - exp[i].rate;
+			index = i + 1;
 		}
 	}
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-			cout << room[i][j];
-	/*
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-			if (room[i][j] == '!')
-				room[i][j] = '@';
-	int count = 0;
-	for (int i = 0; i < n; i++)
-	for (int j = 0; j < n; j++)
-	if (room[i][j] == '@')
-	count++;
-	cout << count << endl;*/
+	
+	cout << n - index << endl;
+	for (int i = index; i < n; i++)
+		cout << exp[i].id << endl;
+
+	cout << n - (n - index) << endl;
+	for (int i = 0; i < index; i++)
+		cout << exp[i].id << endl;
+	
+	return 0;
 }
